@@ -12,7 +12,7 @@ func (k cliKey) String() string {
 }
 
 var (
-	cli   cliKey = "cli"
+	cli   cliKey = "flag"
 	usage cliKey = "usage" //optional
 	value cliKey = "default"
 )
