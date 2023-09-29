@@ -3,6 +3,7 @@ package dflag
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 type cliKey string
@@ -26,7 +27,7 @@ func getDefaultUsage(field reflect.StructField, kind reflect.Kind) string {
 
 func getDefaultValue(field reflect.StructField, kind reflect.Kind) any {
 	if key := field.Tag.Get(value.String()); len(key) != 0 {
-		return key
+		return defaultValueForKind(key, kind)
 	}
 
 	return getDefaultValueForKind(kind)
@@ -46,6 +47,36 @@ func getDefaultValueForInt(field reflect.StructField) int64 {
 
 func getDefaultValueForFloat(field reflect.StructField) float64 {
 	return getDefaultValue(field, reflect.Float64).(float64)
+}
+
+func defaultValueForKind(key string, kind reflect.Kind) any {
+	switch kind {
+	case reflect.String:
+		return key
+	case reflect.Bool:
+		v, err := strconv.ParseBool(key)
+		if err != nil {
+			fmt.Printf("invalid default type %s for %v\n", key, kind.String())
+			return false
+		}
+		return v
+	case reflect.Int64:
+		v, err := strconv.ParseInt(key, 10, 64)
+		if err != nil {
+			fmt.Printf("invalid default type %s for %v\n", key, kind.String())
+			return int64(0)
+		}
+		return v
+	case reflect.Float64:
+		v, err := strconv.ParseFloat(key, 10)
+		if err != nil {
+			fmt.Printf("invalid default type %s for %v\n", key, kind.String())
+			return float64(0)
+		}
+		return v
+	default:
+		return nil
+	}
 }
 
 func getDefaultValueForKind(kind reflect.Kind) any {
