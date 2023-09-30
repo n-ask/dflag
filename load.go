@@ -45,10 +45,10 @@ func (c cmdFlags) parse() error {
 			flag.BoolVar(ptr, key, getDefaultValueForBool(field), getDefaultUsage(field, kind))
 		case reflect.Int:
 			ptr := f.Addr().Interface().(*int)
-			flag.IntVar(ptr, key, int(getDefaultValueForInt(field)), getDefaultUsage(field, kind))
+			flag.IntVar(ptr, key, int(getDefaultValueForInt64(field)), getDefaultUsage(field, kind))
 		case reflect.Int64:
 			ptr := f.Addr().Interface().(*int64)
-			flag.Int64Var(ptr, key, getDefaultValueForInt(field), getDefaultUsage(field, kind))
+			flag.Int64Var(ptr, key, getDefaultValueForInt64(field), getDefaultUsage(field, kind))
 		case reflect.Float64:
 			ptr := f.Addr().Interface().(*float64)
 			flag.Float64Var(ptr, key, getDefaultValueForFloat(field), getDefaultUsage(field, kind))
@@ -86,10 +86,6 @@ func Load(dest any) error {
 	if help := flag.Lookup("help"); help != nil {
 		if help.Value.String() == "true" {
 			flag.PrintDefaults()
-
-			flag.VisitAll(func(f *flag.Flag) {
-				fmt.Printf("%+v\n", f)
-			})
 			os.Exit(0)
 		}
 	}

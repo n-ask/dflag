@@ -41,7 +41,7 @@ func getDefaultValueForBool(field reflect.StructField) bool {
 	return getDefaultValue(field, reflect.Bool).(bool)
 }
 
-func getDefaultValueForInt(field reflect.StructField) int64 {
+func getDefaultValueForInt64(field reflect.StructField) int64 {
 	return getDefaultValue(field, reflect.Int64).(int64)
 }
 
